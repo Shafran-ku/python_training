@@ -1,54 +1,48 @@
 # -*- coding: utf-8 -*-
 from selenium import webdriver
-from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import NoSuchElementException
 from selenium.common.exceptions import NoAlertPresentException
 import unittest
 
-class UntitledTestCase(unittest.TestCase):
+class TestAddContact(unittest.TestCase):
     def setUp(self):
         self.driver = webdriver.Firefox()
         self.driver.implicitly_wait(30)
-        self.base_url = "https://www.google.com/"
-        self.verificationErrors = []
-        self.accept_next_alert = True
-    
-    def test_untitled_test_case(self):
-        driver = self.driver
-        driver.get("http://localhost/addressbook/delete.php?part=2;3;")
-        driver.find_element_by_name("user").click()
-        driver.find_element_by_name("user").click()
-        driver.find_element_by_name("user").clear()
-        driver.find_element_by_name("user").send_keys("admin")
-        driver.find_element_by_name("pass").click()
-        driver.find_element_by_name("pass").clear()
-        driver.find_element_by_name("pass").send_keys("secret")
-        driver.find_element_by_xpath("//input[@value='Login']").click()
-        driver.find_element_by_link_text("add new").click()
-        driver.find_element_by_name("firstname").click()
-        driver.find_element_by_name("firstname").clear()
-        driver.find_element_by_name("firstname").send_keys("First name2")
-        driver.find_element_by_name("middlename").click()
-        driver.find_element_by_name("middlename").clear()
-        driver.find_element_by_name("middlename").send_keys("Middle")
-        driver.find_element_by_name("middlename").send_keys(Keys.DOWN)
-        driver.find_element_by_name("middlename").clear()
-        driver.find_element_by_name("middlename").send_keys("Middle name2")
-        driver.find_element_by_name("lastname").click()
-        driver.find_element_by_name("lastname").clear()
-        driver.find_element_by_name("lastname").send_keys("Last name2")
-        driver.find_element_by_name("address").click()
-        driver.find_element_by_name("address").clear()
-        driver.find_element_by_name("address").send_keys("Address2")
-        driver.find_element_by_name("home").click()
-        driver.find_element_by_name("home").clear()
-        driver.find_element_by_name("home").send_keys("777777777")
-        driver.find_element_by_name("email").click()
-        driver.find_element_by_name("email").clear()
-        driver.find_element_by_name("email").send_keys("a@mail.ru")
-        driver.find_element_by_xpath("(//input[@name='submit'])[2]").click()
-        driver.find_element_by_link_text("home page").click()
-        driver.find_element_by_link_text("Logout").click()
+
+    def test_add_contact(self):
+        wd = self.driver
+        wd.get("http://localhost/addressbook/")
+        wd.find_element_by_name("user").click()
+        wd.find_element_by_name("user").click()
+        wd.find_element_by_name("user").clear()
+        wd.find_element_by_name("user").send_keys("admin")
+        wd.find_element_by_name("pass").click()
+        wd.find_element_by_name("pass").clear()
+        wd.find_element_by_name("pass").send_keys("secret")
+        wd.find_element_by_xpath("//input[@value='Login']").click()
+        wd.find_element_by_link_text("add new").click()
+        wd.find_element_by_name("firstname").click()
+        wd.find_element_by_name("firstname").clear()
+        wd.find_element_by_name("firstname").send_keys("First name2")
+        wd.find_element_by_name("lastname").click()
+        wd.find_element_by_name("middlename").click()
+        wd.find_element_by_name("middlename").clear()
+        wd.find_element_by_name("middlename").send_keys("Middle name2")
+        wd.find_element_by_name("lastname").click()
+        wd.find_element_by_name("lastname").clear()
+        wd.find_element_by_name("lastname").send_keys("Last name2")
+        wd.find_element_by_name("address").click()
+        wd.find_element_by_name("address").clear()
+        wd.find_element_by_name("address").send_keys("Address2")
+        wd.find_element_by_name("home").click()
+        wd.find_element_by_name("home").clear()
+        wd.find_element_by_name("home").send_keys("777777777")
+        wd.find_element_by_name("email").click()
+        wd.find_element_by_name("email").clear()
+        wd.find_element_by_name("email").send_keys("mail@mail.ru")
+        wd.find_element_by_xpath("(//input[@name='submit'])[2]").click()
+        wd.find_element_by_link_text("home").click()
+        wd.find_element_by_link_text("Logout").click()
     
     def is_element_present(self, how, what):
         try: self.driver.find_element(by=how, value=what)
@@ -73,7 +67,6 @@ class UntitledTestCase(unittest.TestCase):
     
     def tearDown(self):
         self.driver.quit()
-        self.assertEqual([], self.verificationErrors)
 
 if __name__ == "__main__":
     unittest.main()
