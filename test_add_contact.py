@@ -1,16 +1,16 @@
 # -*- coding: utf-8 -*-
 from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException
-from selenium.common.exceptions import NoAlertPresentException
+
 import unittest
 
 class TestAddContact(unittest.TestCase):
     def setUp(self):
-        self.driver = webdriver.Firefox()
-        self.driver.implicitly_wait(30)
+        self.wd = webdriver.Firefox()
+        self.wd.implicitly_wait(30)
 
     def test_add_contact(self):
-        wd = self.driver
+        wd = self.wd
         wd.get("http://localhost/addressbook/")
         wd.find_element_by_name("user").click()
         wd.find_element_by_name("user").click()
@@ -45,18 +45,13 @@ class TestAddContact(unittest.TestCase):
         wd.find_element_by_link_text("Logout").click()
     
     def is_element_present(self, how, what):
-        try: self.driver.find_element(by=how, value=what)
+        try: self.wd.find_element(by=how, value=what)
         except NoSuchElementException as e: return False
-        return True
-    
-    def is_alert_present(self):
-        try: self.driver.switch_to_alert()
-        except NoAlertPresentException as e: return False
         return True
     
     def close_alert_and_get_its_text(self):
         try:
-            alert = self.driver.switch_to_alert()
+            alert = self.wd.switch_to_alert()
             alert_text = alert.text
             if self.accept_next_alert:
                 alert.accept()
@@ -66,7 +61,7 @@ class TestAddContact(unittest.TestCase):
         finally: self.accept_next_alert = True
     
     def tearDown(self):
-        self.driver.quit()
+        self.wd.quit()
 
 if __name__ == "__main__":
     unittest.main()
