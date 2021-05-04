@@ -11,9 +11,9 @@ class TestAddGroup(unittest.TestCase):
     def test_add_group(self):
         wd = self.wd
         self.open_home_page(wd)
-        self.login(wd, username = "admin", password = "secret")
+        self.login(wd, username="admin", password="secret")
         self.open_groups_page(wd)
-        self.create_group(wd, Group(name = "test5", header = "xxx", footer = "xxx"))
+        self.create_group(wd, Group(name="test5", header="xxx", footer="xxx"))
         self.return_to_group_page(wd)
         self.logout(wd)
 
@@ -66,18 +66,9 @@ class TestAddGroup(unittest.TestCase):
         # open home page
         wd.get("http://localhost/addressbook/group.php")
 
-    def is_element_present(self, how, what):
-        try: self.wd.find_element(by=how, value=what)
-        except NoSuchElementException as e: return False
-        return True
-    
-    def is_alert_present(self):
-        try: self.wd.switch_to_alert()
-        except NoAlertPresentException as e: return False
-        return True
-
     def tearDown(self):
         self.wd.quit()
+
 
 if __name__ == "__main__":
     unittest.main()
