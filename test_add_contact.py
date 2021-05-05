@@ -12,7 +12,18 @@ class TestAddContact(unittest.TestCase):
         self.open_home_page(wd)
         self.login(wd, username="admin", password="secret")
         self.open_page_new_contact(wd)
-        self.create_new_contact(wd, firstname="First name2", middlename= "Middle name2", lastname="Last name2", address="Address2")
+        self.create_new_contact(wd, firstname="First name2", middlename="Middle name2", lastname="Last name2",
+                                address="Address2", homephone="777777777", email="mail@mail.ru")
+        self.move_to_home_page(wd)
+        self.logout(wd)
+
+    def test_add_empty_contact(self):
+        wd = self.wd
+        self.open_home_page(wd)
+        self.login(wd, username="admin", password="secret")
+        self.open_page_new_contact(wd)
+        self.create_new_contact(wd, firstname="", middlename="", lastname="", address="", homephone="",
+                                email="")
         self.move_to_home_page(wd)
         self.logout(wd)
 
@@ -24,7 +35,7 @@ class TestAddContact(unittest.TestCase):
         # move to home page
         wd.find_element_by_link_text("home").click()
 
-    def create_new_contact(self, wd, firstname, middlename, lastname, address):
+    def create_new_contact(self, wd, firstname, middlename, lastname, address, homephone, email):
         # create new contact
         wd.find_element_by_name("firstname").click()
         wd.find_element_by_name("firstname").clear()
@@ -41,10 +52,10 @@ class TestAddContact(unittest.TestCase):
         wd.find_element_by_name("address").send_keys(address)
         wd.find_element_by_name("home").click()
         wd.find_element_by_name("home").clear()
-        wd.find_element_by_name("home").send_keys("777777777")
+        wd.find_element_by_name("home").send_keys(homephone)
         wd.find_element_by_name("email").click()
         wd.find_element_by_name("email").clear()
-        wd.find_element_by_name("email").send_keys("mail@mail.ru")
+        wd.find_element_by_name("email").send_keys(email)
         # submit contact creation
         wd.find_element_by_xpath("(//input[@name='submit'])[2]").click()
 
