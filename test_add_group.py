@@ -1,75 +1,21 @@
 # -*- coding: utf-8 -*-
-from selenium import webdriver
-import unittest
+import pytest
 from group import Group
+from application import Application
 
-class TestAddGroup(unittest.TestCase):
-    def setUp(self):
-        self.wd = webdriver.Firefox()
-        self.wd.implicitly_wait(30)
+@pytest.fixture                                   #метка, превращает функцию в инициализатор фикстуры
+def app(request):                                 #функция создает фикстуру
+    fixture = Application()
+    request.addfinalizer(fixture.destroy)         #для разрушения фикстуры
+    return fixture
 
-    def test_add_group(self):
-        self.login(username="admin", password="secret")
-        self.create_group(Group(name="test5", header="xxx", footer="xxx"))
-        self.logout()
+def test_add_group(app):                            #тестовый метод, принимающий в качестве параметра фикстуру
+    app.login(username="admin", password="secret")
+    app.create_group(Group(name="test5", header="xxx", footer="xxx"))
+    app.logout()
 
-    def test_add_empty_group(self):
-        self.login(username="admin", password="secret")
-        self.create_group(Group(name="", header="", footer=""))
-        self.logout()
+def test_add_empty_group(app):
+    app.login(username="admin", password="secret")
+    app.create_group(Group(name="", header="", footer=""))
+    app.logout()
 
-    def logout(self):
-        # logout
-        wd = self.wd
-        wd.find_element_by_link_text("Logout").click()
-
-    def return_to_group_page(self):
-        # return to groups page
-        wd = self.wd
-        wd.find_element_by_link_text("group page").click()
-
-    def create_group(self, group):
-        wd = self.wd
-        self.open_groups_page()
-        # init group creation
-        wd.find_element_by_name("group_name").click()
-        # fill group
-        wd.find_element_by_name("group_name").clear()
-        wd.find_element_by_name("group_name").send_keys(group.name)
-        wd.find_element_by_name("group_header").click()
-        wd.find_element_by_name("group_header").clear()
-        wd.find_element_by_name("group_header").send_keys(group.header)
-        wd.find_element_by_name("group_footer").click()
-        wd.find_element_by_name("group_footer").clear()
-        wd.find_element_by_name("group_footer").send_keys(group.footer)
-        # submit group creation
-        wd.find_element_by_name("submit").click()
-        self.return_to_group_page()
-
-    def open_groups_page(self):
-        # open groups page
-        wd = self.wd
-        wd.find_element_by_name("new").click()
-
-    def login(self, username, password):
-        wd = self.wd
-        self.open_home_page()
-        # login
-        wd.find_element_by_name("user").click()
-        wd.find_element_by_name("user").clear()
-        wd.find_element_by_name("user").send_keys(username)
-        wd.find_element_by_name("pass").clear()
-        wd.find_element_by_name("pass").send_keys(password)
-        wd.find_element_by_xpath("//input[@value='Login']").click()
-
-    def open_home_page(self):
-        # open home page
-        wd = self.wd
-        wd.get("http://localhost/addressbook/group.php")
-
-    def tearDown(self):
-        self.wd.quit()
-
-
-if __name__ == "__main__":
-    unittest.main()
