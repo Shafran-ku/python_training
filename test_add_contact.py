@@ -1,98 +1,29 @@
 # -*- coding: utf-8 -*-
-from selenium import webdriver
-import unittest
+import pytest
 from contact import Contact
+from application_for_contact import Application_for_contact
 
+#Инициализация фикстуры
+@pytest.fixture #метка - инициализатор фикстуры
+def app():
+    fixture = Application_for_contact()
+    request.addfinalizator(fixture.destroy)
+    return fixture
 
-class TestAddContact(unittest.TestCase):
-    def setUp(self):
-        self.wd = webdriver.Firefox()
-        self.wd.implicitly_wait(30)
-
-    def test_add_contact(self):
-        wd = self.wd
-        self.open_home_page(wd)
-        self.login(wd, username="admin", password="secret")
-        self.open_page_new_contact(wd)
-        self.create_new_contact(wd, Contact(firstname="First name2", middlename="Middle name2", lastname="Last name2",
+def test_add_contact(app):  #тестовый метод, в качестве параметра принимают фикстуру
+    app.open_home_page()
+    app.login(wd, username="admin", password="secret")
+    app.open_page_new_contact()
+    app.create_new_contact(Contact(firstname="First name2", middlename="Middle name2", lastname="Last name2",
                                 address="Address2", homephone="777777777", email="mail@mail.ru"))
-        self.move_to_home_page(wd)
-        self.logout(wd)
+    app.move_to_home_page()
+    app.logout()
 
-    def test_add_empty_contact(self):
-        wd = self.wd
-        self.open_home_page(wd)
-        self.login(wd, username="admin", password="secret")
-        self.open_page_new_contact(wd)
-        self.create_new_contact(wd, Contact(firstname="", middlename="", lastname="", address="", homephone="",
-                                email=""))
-        self.move_to_home_page(wd)
-        self.logout(wd)
-
-    def logout(self, wd):
-        # logout
-        wd.find_element_by_link_text("Logout").click()
-
-    def move_to_home_page(self, wd):
-        # move to home page
-        wd.find_element_by_link_text("home").click()
-
-    def create_new_contact(self, wd, contact):
-        # create new contact
-        wd.find_element_by_name("firstname").click()
-        wd.find_element_by_name("firstname").clear()
-        wd.find_element_by_name("firstname").send_keys(contact.firstname)
-        wd.find_element_by_name("lastname").click()
-        wd.find_element_by_name("middlename").click()
-        wd.find_element_by_name("middlename").clear()
-        wd.find_element_by_name("middlename").send_keys(contact.middlename)
-        wd.find_element_by_name("lastname").click()
-        wd.find_element_by_name("lastname").clear()
-        wd.find_element_by_name("lastname").send_keys(contact.lastname)
-        wd.find_element_by_name("address").click()
-        wd.find_element_by_name("address").clear()
-        wd.find_element_by_name("address").send_keys(contact.address)
-        wd.find_element_by_name("home").click()
-        wd.find_element_by_name("home").clear()
-        wd.find_element_by_name("home").send_keys(contact.homephone)
-        wd.find_element_by_name("email").click()
-        wd.find_element_by_name("email").clear()
-        wd.find_element_by_name("email").send_keys(contact.email)
-        # submit contact creation
-        wd.find_element_by_xpath("(//input[@name='submit'])[2]").click()
-
-    def open_page_new_contact(self, wd):
-        # open page new contact
-        wd.find_element_by_link_text("add new").click()
-
-    def login(self, wd, username, password):
-        # login
-        wd.find_element_by_name("user").click()
-        wd.find_element_by_name("user").click()
-        wd.find_element_by_name("user").clear()
-        wd.find_element_by_name("user").send_keys(username)
-        wd.find_element_by_name("pass").click()
-        wd.find_element_by_name("pass").clear()
-        wd.find_element_by_name("pass").send_keys(password)
-        wd.find_element_by_xpath("//input[@value='Login']").click()
-
-    def open_home_page(self, wd):
-        # open home page
-        wd.get("http://localhost/addressbook/")
-
-    def close_alert_and_get_its_text(self):
-        try:
-            alert = self.wd.switch_to_alert()
-            alert_text = alert.text
-            if self.accept_next_alert:
-                alert.accept()
-            else:
-                alert.dismiss()
-            return alert_text
-        finally: self.accept_next_alert = True
-    
-    def tearDown(self):
-        self.wd.quit()
-
-if __name__ == "__main__":
-    unittest.main()
+def test_add_empty_contact(app):  #тестовый метод, в качестве параметра принимают фикстуру
+    app.open_home_page()
+    app.login(username="admin", password="secret")
+    app.open_page_new_contact()
+    app.create_new_contact(wd, Contact(firstname="", middlename="", lastname="", address="", homephone="",
+                               email=""))
+    app.move_to_home_page()
+    app.logout()
