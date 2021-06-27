@@ -1,20 +1,22 @@
-# отдельный класс, где содержатся все вспомогательные методы
+#отдельный класс, где содержатся все вспомогательные методы
 
 from selenium import webdriver
 
-# выделили фикстуру в отдельный класс
+# выделим фикстуру в отдельный класс
 class Application:
     def __init__(self):
         self.wd = webdriver.Firefox()
         self.wd.implicitly_wait(60)
 
     def open_home_page(self):
+        # open home page
         wd = self.wd
         wd.get("http://localhost/addressbook/group.php")
 
     def login(self, username, password):
         wd = self.wd
         self.open_home_page()
+        # login
         wd.find_element_by_name("user").click()
         wd.find_element_by_name("user").clear()
         wd.find_element_by_name("user").send_keys(username)
@@ -23,6 +25,7 @@ class Application:
         wd.find_element_by_xpath("//input[@value='Login']").click()
 
     def open_groups_page(self):
+        # open groups page
         wd = self.wd
         wd.find_element_by_name("new").click()
 
